@@ -11,7 +11,7 @@ app.use(express.json());
 
 const owner = { pubKey: "", privateKey: "", address: "", balance: 0 };
 const receiver = {
-  "0xabdf3704e55799c4d7a5fa25": 0,
+  "0x11cfc6400cda17107757b55604b4346fd2bace2f": 0,
 };
 
 // const balances = {
@@ -26,7 +26,7 @@ app.post("/connect-wallet", (req, res) => {
   const privateKey = secp.utils.randomPrivateKey();
   const publicKey = secp.getPublicKey(privateKey);
   const slicedPubKey = publicKey.slice(1);
-  const address = keccak256(slicedPubKey).slice(20);
+  const address = keccak256(slicedPubKey).slice(-20);
   owner.privateKey = toHex(privateKey);
   owner.pubKey = toHex(publicKey);
   owner.address = "0x" + toHex(address);
@@ -61,6 +61,10 @@ app.post("/send", (req, res) => {
 
   // setInitialBalance(sender);
   // setInitialBalance(recipient);
+
+  if (sender !== owner.address) {
+    console.error("Wallet address has been compromised");
+  }
 
   const int8Sig = Uint8Array.from(Object.values(sig[0]));
 

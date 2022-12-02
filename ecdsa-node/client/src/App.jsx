@@ -4,6 +4,7 @@ import "./App.scss";
 import { useState } from "react";
 import ConnectWallet from "./ConnectWallet";
 import server from "./server";
+import { useEffect } from "react";
 
 function App() {
   const [balance, setBalance] = useState(0);
