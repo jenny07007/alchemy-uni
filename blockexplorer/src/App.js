@@ -1,36 +1,63 @@
-import { Alchemy, Network } from 'alchemy-sdk';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from "react";
 
-import './App.css';
+import Table from "./components/Table";
+import Transactions from "./components/Transactions";
+import { alchemy } from "./utils/alchemy";
 
-// Refer to the README doc for more information about using API
-// keys in client-side code. You should never do this in production
-// level code.
-const settings = {
-  apiKey: process.env.REACT_APP_ALCHEMY_API_KEY,
-  network: Network.ETH_MAINNET,
-};
-
-
-// In this week's lessons we used ethers.js. Here we are using the
-// Alchemy SDK is an umbrella library with several different packages.
-//
-// You can read more about the packages here:
-//   https://docs.alchemy.com/reference/alchemy-sdk-api-surface-overview#api-surface
-const alchemy = new Alchemy(settings);
+import "./App.css";
 
 function App() {
   const [blockNumber, setBlockNumber] = useState();
+  const [block, setBlock] = useState({});
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function getBlockNumber() {
       setBlockNumber(await alchemy.core.getBlockNumber());
     }
-
     getBlockNumber();
-  });
+  }, []);
 
-  return <div className="App">Block Number: {blockNumber}</div>;
+  const getBlock = useCallback(async () => {
+    setLoading(true);
+    const block = await alchemy.core.getBlock(blockNumber);
+    setBlock(block);
+
+    const timeoutID = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+
+    return () => clearTimeout(timeoutID);
+  }, [blockNumber]);
+
+  useEffect(() => {
+    getBlock();
+  }, [getBlock]);
+
+  return (
+    <div className="container">
+      {loading ? (
+        <div className="loading-state">WORKING 🚀...</div>
+      ) : (
+        <div className="wrapper fade-in">
+          <h1>Last Block Number {blockNumber}</h1>
+          <hr />
+          {block && (
+            <div>
+              <Table block={block} />
+              <div className="transactions-wrapper">
+                <div className="transactions-title">
+                  <h2>Transactions</h2>
+                  <p>{block?.transactions?.length} transactions</p>
+                </div>
+                <Transactions block={block} />
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default App;
