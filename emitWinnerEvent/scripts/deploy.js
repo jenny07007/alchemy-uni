@@ -1,27 +1,16 @@
-// We require the Hardhat Runtime Environment explicitly here. This is optional
-// but useful for running the script in a standalone fashion through `node <script>`.
-//
-// You can also run a script with `npx hardhat run <script>`. If you do that, Hardhat
-// will compile your contracts, add the Hardhat Runtime Environment's members to the
-// global scope, and execute the script.
 const hre = require("hardhat");
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const unlockTime = currentTimestampInSeconds + 60;
+  const targetContractAddress = "0xcF469d3BEB3Fc24cEe979eFf83BE33ed50988502";
+  const ProxyContract = await hre.ethers.getContractFactory("ProxyContract");
+  const proxyContract = await ProxyContract.deploy();
+  await proxyContract.deployed();
 
-  const lockedAmount = hre.ethers.utils.parseEther("0.001");
+  console.log("ProxyContract deployed to:", proxyContract.address);
 
-  const Lock = await hre.ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
-
-  await lock.deployed();
-
-  console.log(
-    `Lock with ${ethers.utils.formatEther(
-      lockedAmount
-    )}ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`
-  );
+  const tx = await proxyContract.callAttempt(targetContractAddress);
+  const receipt = await tx.wait();
+  console.log("Transaction conformed: ", receipt);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
