@@ -18,3 +18,7 @@
   Therefore, the main concept here is that `msg.sender` can be either an EOA or a contract, depending on who or what initiated the function call. On the other hand, `tx.origin` is always the address that initiated the transaction.
 
   [proxy contrast](https://goerli.etherscan.io/address/0x48ee2F1402A87C55089360A8f8E9871d52C07dD5)
+
+- [x] [week 4 unit test challenge](/unit-tests/)
+
+  The `destroyFaucet` function should be able to called by the contract owner as should the `withdrawAll` function
