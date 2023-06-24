@@ -21,4 +21,4 @@
 
 - [x] [week 4 unit test challenge](/unit-tests/)
 
-  The `destroyFaucet` function should be able to called by the contract owner as should the `withdrawAll` function
+  The `destroyFaucet` function, as well as the `withdrawAll` function, should be callable by the contract owner.
