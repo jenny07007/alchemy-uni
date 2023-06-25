@@ -22,3 +22,7 @@
 - [x] [week 4 unit test challenge](/unit-tests/)
 
   The `destroyFaucet` function, as well as the `withdrawAll` function, should be callable by the contract owner.
+
+- [x] [week 5 group activity](/Contract-Puzzles/)
+
+  The challenge involved passing five tests from the corresponding contracts without altering the contract code. Each test had to successfully call the `win` function. The fifth test proved more difficult because, in Ethereum, addresses are typically randomly generated. As a result, the likelihood of generating an address smaller than the specified threshold is quite low. To overcome this, I used brute force to create new accounts until I found one that met the criteria.
